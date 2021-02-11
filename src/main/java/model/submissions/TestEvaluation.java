@@ -8,10 +8,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import model.problems.tests.ProblemTest;
 
 @Entity
 @Table(name = "TEST_EVALUATION")
+@NoArgsConstructor
+@Data
 public class TestEvaluation {
 	
 	@EmbeddedId

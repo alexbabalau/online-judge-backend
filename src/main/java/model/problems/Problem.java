@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import model.problems.tests.ProblemTest;
 import model.problems.tests.Example;
 import model.submissions.Submission;
@@ -17,6 +19,8 @@ import model.submissions.Submission;
 @Entity
 @Table(name="PROBLEMS")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Problem {
 	
 	@Id

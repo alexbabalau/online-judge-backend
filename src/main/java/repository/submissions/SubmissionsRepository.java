@@ -10,5 +10,4 @@ public interface SubmissionsRepository extends Repository<Submission, Long>{
 	
 	Submission findById(Long id);
 	
-	
 }
