@@ -3,6 +3,8 @@ package problems;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.OnlineJudgeApplication;
@@ -24,17 +27,14 @@ public class ProblemsServiceTest {
 	@Autowired
 	private ProblemsService problemsService;
 	
-	private Problem problem;
+	private static Problem problem;
 	
 	
-	@BeforeEach
-	public void setup() {
-		this.problem = new Problem(Long.valueOf(0),
+	@BeforeAll
+	public static void setup() {
+		problem = new Problem(Long.valueOf(0),
 				"Algoritmul lui Euclid",
-				"Cel mai mare divizor comun dintre doua numere naturale a si b\r\n" + 
-				"este cel mai mare numar natural pozitiv d care divide ambele numere.\r\n" + 
-				"Dandu-se T perechi de numere naturale (a, b), sa se calculeze cel mai mare divizor\r\n" + 
-				"comun al numerelor din fiecare pereche in parte.",
+				"Cel mai mare divizor comun dintre doua numere naturale a si b",
 				"Fisierul de intrare euclid2.in contine pe prima linie numarul T de perechi.\r\n" + 
 				"Urmatoarele T linii contin cate doua numere naturale a si b.",
 				"In fisierul de iesire euclid2.out se vor scrie T linii.\r\n" + 
@@ -58,6 +58,8 @@ public class ProblemsServiceTest {
 		
 		Long id = addedProblem.getId();
 		
+		System.out.println(id);
+		
 		assertNotNull(id);
 		
 		Problem retrievedProblem = this.problemsService.getById(id);
@@ -67,6 +69,46 @@ public class ProblemsServiceTest {
 		assertEquals(id, retrievedProblem.getId());
 		
 		assertEquals(retrievedProblem.getTitle(), "Algoritmul lui Euclid");
+	}
+	
+	@Test
+	public void updateProblemTest() {
+		Problem addedProblem = this.problemsService.addProblem(problem);
+		
+		Long id = addedProblem.getId();
+		
+		Problem newProblem = new Problem(Long.valueOf(0), 
+				"Alta Problema",
+				null,
+				null,
+				null,
+				null,
+				10,
+				2,
+				"",
+				null,
+				null,
+				null,
+				null);
+		
+		this.problemsService.updateProblem(id, newProblem);
+		
+		Problem retrievedProblem = this.problemsService.getById(id);
+		
+		assertNotNull(retrievedProblem);
+		
+		assertEquals(id, retrievedProblem.getId());
+		
+		assertEquals(retrievedProblem.getTitle(), "Alta Problema");
+		
+		assertEquals(retrievedProblem.getTimeLimitInMiliseconds(), 10);
+		
+		List<Problem> allProblems = this.problemsService.getAllProblems();
+		
+		assertNotNull(allProblems);
+		
+		assertEquals(allProblems.size(), 1);
+		
 	}
 	
 }

@@ -13,4 +13,5 @@ public interface ProblemsRepository extends Repository<Problem, Long> {
 	Problem findById(Long id);
 	
 	List<Problem> findAll();
+	
 }

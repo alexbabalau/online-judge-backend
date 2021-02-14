@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import model.problems.Problem;
@@ -30,5 +31,10 @@ public class ProblemsService {
 	
 	public Problem getById(Long id) {
 		return this.problemsRepository.findById(id);
+	}
+	
+	public Problem updateProblem(Long id, Problem newProblem) {
+		newProblem.setId(id);
+		return this.problemsRepository.save(newProblem);
 	}
 }
