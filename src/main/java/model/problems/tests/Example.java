@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "EXAMPLES")
-@NoArgsConstructor
 public class Example extends BasicTest {
+
+	public Example(Long id, String input, String output) {
+		super(id, input, output);
+	}
 	
 }

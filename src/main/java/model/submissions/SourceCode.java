@@ -6,9 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Embeddable
+@Data
+@AllArgsConstructor
 public class SourceCode {
 	
 	private Integer sizeInBytes;
