@@ -2,12 +2,17 @@ package model.problems;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +29,7 @@ import model.submissions.Submission;
 public class Problem {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String title;
@@ -44,19 +50,21 @@ public class Problem {
 	
 	private String tutorial;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "PROBLEM_ID")
 	private List<Example> examples;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "PROBLEM_ID")
+	@JsonIgnore
 	private List<ProblemTest> tests;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "PROBLEM_ID")
 	private List<Constraint> constraints;
 	
 	@OneToMany
 	@JoinColumn(name = "PROBLEM_ID")
+	@JsonIgnore
 	private List<Submission> submissions;
 }

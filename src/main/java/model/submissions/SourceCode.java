@@ -8,10 +8,12 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class SourceCode {
 	
 	private Integer sizeInBytes;

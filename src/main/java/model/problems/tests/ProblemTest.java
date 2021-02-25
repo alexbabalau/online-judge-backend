@@ -2,6 +2,7 @@ package model.problems.tests;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -9,6 +10,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import model.submissions.TestEvaluation;
 
 @Entity
@@ -22,7 +24,8 @@ public class ProblemTest extends BasicTest{
 		super(id, input, output);
 	}
 
-	@OneToMany(mappedBy = "test")
+	@OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List<TestEvaluation> evaluation;
 	
 }

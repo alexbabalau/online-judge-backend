@@ -2,6 +2,7 @@ package service.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,14 @@ public class SourceCodeEvaluator {
 	
 	private SourceFileCreator fileCreator;
 	private SourceCodeCompilerFactory compilerFactory;
-	private TestEvaluationRepository testEvaluationRepository;
 	private SourceCodeRunner runner;
 	
+	private List<TestEvaluation> evaluationReport;
+	
 	@Autowired
-	public SourceCodeEvaluator(SourceFileCreator fileCreator, SourceCodeCompilerFactory compilerFactory, TestEvaluationRepository testEvaluationRepository, SourceCodeRunner runner) {
+	public SourceCodeEvaluator(SourceFileCreator fileCreator, SourceCodeCompilerFactory compilerFactory, SourceCodeRunner runner) {
 		this.fileCreator = fileCreator;
 		this.compilerFactory = compilerFactory;
-		this.testEvaluationRepository = testEvaluationRepository;
 		this.runner = runner;
 	}
 	
@@ -43,23 +44,32 @@ public class SourceCodeEvaluator {
 	@Transactional
 	public void evaluate(Submission submission) throws IOException, InterruptedException {
 		File executable = getExecutableForEvaluation(submission.getCode().getCode(), submission.getCompiler());
-		saveTestEvaluations(executable, submission);
+		evaluationReport = getTestEvaluations(executable, submission);
+		submission.setStatus("Completed");
+		submission.setScore(getScoreEvaluationReport());
 		executable.delete();
 	}
 	
-	private void saveTestEvaluations(File executable, Submission submission) throws IOException, InterruptedException {
+	public List<TestEvaluation> getEvaluationReport(){
+		return evaluationReport;
+	}
+	
+	private Integer getScoreEvaluationReport() {
+		return evaluationReport.stream().mapToInt(evaluation -> evaluation.getScore()).sum();
+	}
+	
+	private List<TestEvaluation> getTestEvaluations(File executable, Submission submission) throws IOException, InterruptedException {
 		Problem problem = submission.getProblem();
 		List<ProblemTest> tests = problem.getTests();
+		List<TestEvaluation> result = new ArrayList<TestEvaluation>();
 		Integer score = 0;
 		for(ProblemTest test : tests) {
 			TestEvaluation evaluation = getEvaluation(executable, test);
-			score += evaluation.getScore();
 			evaluation.setSubmission(submission);
 			evaluation.setTest(test);
-			testEvaluationRepository.save(evaluation);
+			result.add(evaluation);
 		}
-		submission.setStatus("Completed");
-		submission.setScore(score);
+		return result;
 	}
 	
 	private TestEvaluation getEvaluation(File executable, ProblemTest test) throws IOException, InterruptedException {
